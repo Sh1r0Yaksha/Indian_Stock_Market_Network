@@ -79,28 +79,3 @@ output_path = 'correlation_log_diff_ch_closing_price.csv'
 
 log_diff_df = calculate_log_difference(folder_path, column_name)
 calculate_correlation(log_diff_df, output_path)
-
-
-# Loop through each pair of CSV files and calculate correlation
-# for i in range(len(csv_files)):
-#     for j in range(i + 1, int(len(csv_files))):
-#         # Read CSV files and calculate logarithmic differences
-#         file1 = pd.read_csv(os.path.join(folder_path, csv_files[i]))
-#         file2 = pd.read_csv(os.path.join(folder_path, csv_files[j]))
-
-#         file1['Log Difference'] = np.log(file1['CH_CLOSING_PRICE']) - np.log(file1['CH_PREVIOUS_CLS_PRICE'])
-#         file2['Log Difference'] = np.log(file2['CH_CLOSING_PRICE']) - np.log(file2['CH_PREVIOUS_CLS_PRICE'])
-
-#         # Compute correlation between logarithmic differences
-#         correlation = file1['Log Difference'].corr(file2['Log Difference'])
-
-#         # Remove '.csv' extension from file names and append to the list
-#         file1_name = os.path.splitext(csv_files[i])[0]
-#         file2_name = os.path.splitext(csv_files[j])[0]
-#         correlation_values.append({'File1': file1_name, 'File2': file2_name, 'Correlation': correlation})
-#     gc.collect()
-#     print(i, " is done")
-
-# Create a DataFrame from the correlation values list
-# correlation_df = pd.DataFrame(correlation_values)
-# correlation_df.to_csv('corr_closing_price_clean.csv')
