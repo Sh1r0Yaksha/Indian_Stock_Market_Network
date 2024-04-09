@@ -2,6 +2,7 @@ import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+from pyvis.network import Network
 
 colname = 'CH_CLOSING_PRICE'
 df = pd.read_csv('correlation_data/correlation_log_diff_' + colname + '.csv')
@@ -31,7 +32,7 @@ def plot_threshold(corr_df):
     plt.show()
 
 plot_threshold(df)
-threshold = 0.25
+threshold = 0.4
 
 
 def create_network(corr_df, threshold):
@@ -46,8 +47,8 @@ def create_network(corr_df, threshold):
     print(f"Edge density of graph at threshold {threshold} is {edge_density}")
     return G
 
-
 G = create_network(df, threshold)
+print(f"Number of edges of network {G.number_of_edges()}")
 
 def sort_and_print_top_x(df, num, centrality):
     sorted_df = sorted(df.items(), key=lambda x: x[1], reverse=True)
@@ -74,3 +75,21 @@ def calculate_centrality_measures(network):
 
 calculate_centrality_measures(G)
 
+net = Network()
+net.from_nx(G)
+
+# net.toggle_physics(False)
+# net.show_buttons(filter_=['physics'])
+
+net.force_atlas_2based(
+    # theta = 0.5,
+    gravity=-50, 
+    central_gravity=0.01, 
+    spring_length=100,
+    spring_strength=0.08, 
+    damping=0.4, 
+    overlap=0
+)
+
+
+net.save_graph('out.html')
