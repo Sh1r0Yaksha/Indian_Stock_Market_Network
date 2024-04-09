@@ -1,10 +1,7 @@
 import pandas as pd
-import random
-from datetime import date
 import numpy as np
 # from jugaad_data.nse import stock_df, bhavcopy_save
 import os
-import gc
 
 # bhavcopy_save(date(2020,1,1), "./")
 
@@ -37,18 +34,6 @@ folder_path = 'data_clean'
 #                 continue
 
 csv_files = [file for file in os.listdir(folder_path) if file.endswith('.csv')]
-colname = "CH_CLOSING_PRICE"
-# # Initialize a list to store correlation values and file names
-# correlation_values = []
-
-def calculate_log_diff_closing(csv_files, colname):
-    for filename in csv_files:
-        file_path = os.path.join(folder_path, filename)
-        df = pd.read_csv(file_path)
-        df['LOG_DIFF_' + colname] = np.log(df[colname]) - np.log(df[colname].shift(1))
-        df.to_csv(file_path, index=False)
-
-calculate_log_diff_closing(csv_files, colname)
 
 def calculate_log_difference(folder_path, column_name):
     log_diff_data = []
@@ -74,8 +59,11 @@ def calculate_correlation(log_diff_df, output_path):
     correlation_df.columns = ['FILENAME1', 'FILENAME2', 'CORRELATION']
     correlation_df.to_csv(output_path, index=False)
 
-column_name = 'CH_CLOSING_PRICE'
-output_path = 'correlation_log_diff_ch_closing_price.csv'
+column_names = ['CH_TRADE_HIGH_PRICE', 'CH_TRADE_LOW_PRICE',
+                'CH_OPENING_PRICE', 'CH_TOT_TRADED_QTY',
+                'CH_CLOSING_PRICE', 'CH_TOT_TRADED_VAL']
 
-log_diff_df = calculate_log_difference(folder_path, column_name)
-calculate_correlation(log_diff_df, output_path)
+for colname in column_names:
+    output_path = 'correlation_data/correlation_log_diff_' + colname  +'.csv'
+    log_diff_df = calculate_log_difference(folder_path, colname)
+    calculate_correlation(log_diff_df, output_path)
